@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using MobileBG.Data;
 
 public sealed class SeleniumServerFactory<TStartup> : WebApplicationFactory<TStartup>
     where TStartup : class
@@ -27,6 +29,8 @@ public sealed class SeleniumServerFactory<TStartup> : WebApplicationFactory<TSta
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDbContext>(
+           options => options.UseSqlServer("Server=.;Database=MobileBG;Trusted_Connection=True;MultipleActiveResultSets=true"));
         }
 
         public void Configure()

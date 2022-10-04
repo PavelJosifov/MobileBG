@@ -17,7 +17,8 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddDbContext<ApplicationDbContext>(
-            options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
+            //options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
+            options => options.UseSqlServer("Server=.;Database=MobileBG;Trusted_Connection=True;MultipleActiveResultSets=true"));
 
         services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
             .AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
