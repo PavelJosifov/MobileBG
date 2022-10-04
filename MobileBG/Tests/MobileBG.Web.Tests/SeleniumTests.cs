@@ -34,9 +34,8 @@
         public void Number_of_Cars_Test()
         {
             this.browser.Navigate().GoToUrl("https://localhost:44319/");
-            Thread.Sleep(5000);
             var numberOfCars = this.browser.FindElements(By.CssSelector("body > div > main > div.container.align-items-center.mb-5 > div > div:nth-child(2) > div > span.count-numbers")).First();
-            Assert.Equal("9", numberOfCars.Text);
+            Assert.Equal("10", numberOfCars.Text);
         }
 
         [Fact]
