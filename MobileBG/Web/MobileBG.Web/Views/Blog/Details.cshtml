@@ -1,0 +1,45 @@
+﻿@using MobileBG.Web.ViewModels.Blogs
+@model BlogInfoViewModel
+
+@{
+    this.ViewData["Title"] = $"{this.Model.Title}";
+}
+
+@section Head
+{
+<style>
+    body {
+        background-color: #e2e2e2;
+    }
+
+    .box {
+        -webkit-box-shadow: 0px 3px 24px 10px rgba(0,0,0,0.28);
+        box-shadow: 0px 3px 24px 10px rgba(0,0,0,0.28);
+    }
+
+</style>
+}
+
+
+<form id="delete" method="post"></form>
+<div class="container">
+
+    <partial name="_MessagePartial">
+        <div class="row">
+            <div class="box card p-4 mt-5 mb-5 col-lg-12">
+                <img class="card-img-top" style="height: 25rem; object-fit: cover;" src="@this.Model.ImageUrl">
+                @if (this.User.IsInRole("Administrator"))
+                {
+                    <a asp-area="Administration" asp-controller="Blog" asp-action="Edit" asp-route-id="@this.Model.Id" style="width:4rem; position:absolute" class="btn btn-sm btn-warning" type="button">Edit</a>
+                    <button form="delete" asp-area="Administration" asp-controller="Blog" asp-action="Delete" asp-route-id="@this.Model.Id" style="width:4rem; position:absolute; margin-left:4rem" class="btn btn-sm btn-danger" type="submit">Delete</button>
+                }
+
+                <div class="card-body">
+                    <h1 class="card-title">@this.Model.Title</h1>
+                    <span><i class="fa fa-calendar"></i> @this.Model.CreatedOn.ToString("dd/MM/yyyy") &nbsp</span>
+                    <span><i class="fa fa-user"></i> MobileBG</span>
+                    <p class="card-text">@Html.Raw(this.Model.Content)</p>
+                </div>
+            </div>
+        </div>
+</div>

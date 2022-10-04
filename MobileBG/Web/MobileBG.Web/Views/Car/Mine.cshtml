@@ -1,0 +1,79 @@
+﻿@using MobileBG.Web.ViewModels.Cars
+
+@model SearchCarViewModel
+@{
+    this.ViewData["Title"] = "My cars";
+}
+
+<partial name="_MessagePartial">
+
+<form id="carsForm"></form>
+<form id="edit"></form>
+<form id="delete" method="post"></form>
+<h1 class="text-center display-4">My cars</h1>
+<div class="container-fluid">
+    <div class="row no-gutters">
+        @foreach (var car in @Model.Cars)
+        {
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                <a class="card p-1 m-1 w-5" style="text-decoration: none;" asp-controller="Car" asp-action="Details" asp-route-id="@car.Id">
+                    <img class="card-img-top" style="height: 10rem; object-fit: cover;" src="@car.ImageUrl" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-size:17px;">@car.MakeName @car.ModelName</h5>
+                        <hr>
+                        <p class="card-text">Horse Power: @(car.HorsePower) </p>
+                        <p class="card-text">Price: @((int)car.Price) BGN</p>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<nav aria-label="...">
+    <ul class="pagination justify-content-center">
+        <li class="page-item @if (!Model.HasPreviousPage) {
+        <text>disabled</text>
+        }">
+            <a class="page-link" asp-controller="Car" asp-action="Mine" asp-route-id="@Model.FirstPageNumber" onclick="location.href=this.href+window.location.search;return false;"><strong>First</strong></a>
+        </li>
+        <li class="page-item @if (!Model.HasPreviousPage) {
+        <text>disabled</text>
+ }">
+            <a class="page-link" asp-controller="Car" asp-action="Mine" asp-route-id="@Model.PreviousPageNumber" onclick="location.href=this.href+window.location.search;return false;"><strong>Previous</strong></a>
+        </li>
+        @for (int i = Model.PageNumber - 2; i < Model.PageNumber; i++)
+        {
+            if (i > 0)
+            {
+                <li class="page-item"><a class="page-link" asp-controller="Car" asp-action="Mine" asp-route-id="@i" onclick="location.href=this.href+window.location.search;return false;">@i</a></li>
+            }
+
+        }
+        <li class="page-item active" aria-current="page">
+            <span class="page-link">
+                @Model.PageNumber
+                <span class="sr-only">(current)</span>
+            </span>
+        </li>
+        @for (int i = Model.PageNumber + 1; i <= Model.PageNumber + 2; i++)
+        {
+            if (i <= Model.PagesCount)
+            {
+                <li class="page-item"><a class="page-link" asp-controller="Car" asp-action="Mine" asp-route-id="@i" onclick="location.href=this.href+window.location.search;return false;">@i</a></li>
+            }
+
+        }
+        <li class="page-item @if (!Model.HasNextPage) {
+        <text>disabled</text>
+ }">
+            <a class="page-link" asp-controller="Car" asp-action="Mine" asp-route-id="@Model.NextPageNumber" onclick="location.href=this.href+window.location.search;return false;"><strong>Next</strong></a>
+        </li>
+        <li class="page-item @if (!Model.HasNextPage) {
+        <text>disabled</text>
+ }">
+            <a class="page-link" asp-controller="Car" asp-action="Mine" asp-route-id="@Model.LastPageNumber" onclick="location.href=this.href+window.location.search;return false;"><strong>Last</strong></a>
+        </li>
+    </ul>
+</nav>
+

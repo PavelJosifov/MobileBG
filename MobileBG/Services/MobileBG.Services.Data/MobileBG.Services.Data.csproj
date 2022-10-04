@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.312" PrivateAssets="all">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\MobileBG.Data.Common\MobileBG.Data.Common.csproj" />
+    <ProjectReference Include="..\..\Data\MobileBG.Data.Models\MobileBG.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Web\MobileBG.Web.ViewModels\MobileBG.Web.ViewModels.csproj" />
+    <ProjectReference Include="..\MobileBG.Services.Mapping\MobileBG.Services.Mapping.csproj" />
+    <ProjectReference Include="..\MobileBG.Services.Messaging\MobileBG.Services.Messaging.csproj" />
+    <ProjectReference Include="..\MobileBG.Services\MobileBG.Services.csproj" />
+  </ItemGroup>
+
+</Project>
