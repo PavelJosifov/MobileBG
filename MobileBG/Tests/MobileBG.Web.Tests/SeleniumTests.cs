@@ -2,12 +2,10 @@
 {
     using System;
     using System.Linq;
-    using System.Security.Policy;
     using System.Threading;
-    using CloudinaryDotNet.Actions;
+
     using OpenQA.Selenium;
     using OpenQA.Selenium.Chrome;
-    using OpenQA.Selenium.DevTools.V104.Browser;
     using Xunit;
 
     public class SeleniumTests : IClassFixture<SeleniumServerFactory<Startup>>, IDisposable
@@ -24,7 +22,6 @@
             var opts = new ChromeOptions();
             this.browser = new ChromeDriver(opts);
             this.browser.Manage().Window.Maximize();
-            
         }
 
         [Fact]
@@ -40,7 +37,7 @@
         {
             this.browser.Navigate().GoToUrl(SiteUrl);
             var numberOfCars = this.browser.FindElements(By.CssSelector("body > div > main > div.container.align-items-center.mb-5 > div > div:nth-child(2) > div > span.count-numbers")).First();
-            Assert.Equal("10", numberOfCars.Text);
+            Assert.Equal("9", numberOfCars.Text);
         }
 
         [Fact]
@@ -103,12 +100,12 @@
         public void Register_Test()
         {
             var random = new Random().Next(0,100000);
-            string TestEmail = $"{random}test@test.test";
+            string testEmail = $"{random}test@test.test";
             this.browser.Navigate().GoToUrl(SiteUrl);
             Thread.Sleep(2000);
             this.browser.FindElement(By.CssSelector("#navbarsExample07 > ul.navbar-nav.me-auto > li:nth-child(1) > a")).Click();
             Thread.Sleep(500);
-            this.browser.FindElement(By.CssSelector("#Input_Email")).SendKeys(TestEmail);
+            this.browser.FindElement(By.CssSelector("#Input_Email")).SendKeys(testEmail);
             Thread.Sleep(500);
             this.browser.FindElement(By.CssSelector("#Input_Password")).SendKeys("123456");
             Thread.Sleep(500);
@@ -117,7 +114,7 @@
             this.browser.FindElement(By.CssSelector("#registerSubmit")).Click();
             Thread.Sleep(500);
             var actualText = this.browser.FindElement(By.CssSelector("#navbarsExample07 > ul.navbar-nav.me-auto > li:nth-child(1) > a"));
-            Assert.Equal($"Hello {TestEmail.Split("@")[0]}", actualText.Text);
+            Assert.Equal($"Hello {testEmail.Split("@")[0]}", actualText.Text);
         }
 
         [Fact]
@@ -165,8 +162,64 @@
             Assert.Equal("Year made: 2005", actualyear.Text);
             this.CarDelete();
             Thread.Sleep(500);
-         
+        }
 
+        [Fact]
+        public void Blog_Test()
+        {
+            this.AdminLogin();
+            Thread.Sleep(500);
+            this.BlogCreation();
+            Thread.Sleep(500);
+            this.LogOut();
+            this.UserLogin();
+            this.browser.FindElement(By.CssSelector("#navbarsExample07 > ul.navbar-nav.mr-auto > li:nth-child(4) > a")).Click();
+            this.browser.FindElement(By.CssSelector("body > div > main > div > div.description > p.read-more > a")).Click();
+            var actualTitle = this.browser.FindElement(By.CssSelector("body > div > main > div > div > div > div > h1"));
+            Assert.Equal("TEST Title", actualTitle.Text);
+            this.LogOut();
+            this.AdminLogin();
+            this.browser.FindElement(By.CssSelector("#navbarsExample07 > ul.navbar-nav.mr-auto > li:nth-child(2) > a")).Click();
+            this.browser.FindElement(By.CssSelector("body > div > main > div > div.description > p.read-more > a")).Click();
+            this.browser.FindElement(By.CssSelector("body > div > main > div > div > div > button")).Click();
+        }
+
+        private void BlogCreation()
+        {
+            this.browser.FindElement(By.CssSelector("#dropdown07")).Click();
+            this.browser.FindElement(By.CssSelector("#navbarsExample07 > ul.navbar-nav.mr-auto > li.nav-item.dropdown.show > div > a:nth-child(9)")).Click();
+            this.browser.FindElement(By.CssSelector("#Title")).SendKeys("TEST Title");
+            this.browser.FindElement(By.XPath("//*[@id=\"Image\"]")).SendKeys(@"C:\Users\pavel\Desktop\1.jpg");
+            this.browser.SwitchTo().Frame(0);
+            this.browser.FindElement(By.XPath("//*[@id=\"tinymce\"]/p")).SendKeys("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
+            this.browser.SwitchTo().ParentFrame();
+            this.browser.FindElement(By.XPath("/html/body/div[1]/main/form/button")).Click();
+        }
+
+        private void UserLogin()
+        {
+            this.browser.Navigate().GoToUrl(SiteUrl);
+            Thread.Sleep(2000);
+            this.browser.FindElement(By.CssSelector("#navbarsExample07 > ul.navbar-nav.me-auto > li:nth-child(2) > a")).Click();
+            Thread.Sleep(500);
+            this.browser.FindElement(By.CssSelector("#Input_Email")).SendKeys("simeon99@abv.bg");
+            Thread.Sleep(500);
+            this.browser.FindElement(By.CssSelector("#Input_Password")).SendKeys("123456");
+            Thread.Sleep(500);
+            this.browser.FindElement(By.CssSelector("#login-submit")).Click();
+        }
+
+        private void AdminLogin()
+        {
+            this.browser.Navigate().GoToUrl(SiteUrl);
+            Thread.Sleep(2000);
+            this.browser.FindElement(By.CssSelector("#navbarsExample07 > ul.navbar-nav.me-auto > li:nth-child(2) > a")).Click();
+            Thread.Sleep(500);
+            this.browser.FindElement(By.CssSelector("#Input_Email")).SendKeys("admin@admin.com");
+            Thread.Sleep(500);
+            this.browser.FindElement(By.CssSelector("#Input_Password")).SendKeys("123456");
+            Thread.Sleep(500);
+            this.browser.FindElement(By.CssSelector("#login-submit")).Click();
         }
 
         private void CarDelete()
@@ -212,31 +265,6 @@
             this.browser.FindElement(By.XPath("/html/body/div/main/div/div/div/form/button")).Click();
         }
 
-        private void UserLogin()
-        {
-            this.browser.Navigate().GoToUrl(SiteUrl);
-            Thread.Sleep(2000);
-            this.browser.FindElement(By.CssSelector("#navbarsExample07 > ul.navbar-nav.me-auto > li:nth-child(2) > a")).Click();
-            Thread.Sleep(500);
-            this.browser.FindElement(By.CssSelector("#Input_Email")).SendKeys("simeon99@abv.bg");
-            Thread.Sleep(500);
-            this.browser.FindElement(By.CssSelector("#Input_Password")).SendKeys("123456");
-            Thread.Sleep(500);
-            this.browser.FindElement(By.CssSelector("#login-submit")).Click();
-        }
-
-        private void AdminLogin()
-        {
-            this.browser.Navigate().GoToUrl(SiteUrl);
-            Thread.Sleep(2000);
-            this.browser.FindElement(By.CssSelector("#navbarsExample07 > ul.navbar-nav.me-auto > li:nth-child(2) > a")).Click();
-            Thread.Sleep(500);
-            this.browser.FindElement(By.CssSelector("#Input_Email")).SendKeys("admin@admin.com");
-            Thread.Sleep(500);
-            this.browser.FindElement(By.CssSelector("#Input_Password")).SendKeys("123456");
-            Thread.Sleep(500);
-            this.browser.FindElement(By.CssSelector("#login-submit")).Click();
-        }
         public void Dispose()
         {
             this.Dispose(true);
